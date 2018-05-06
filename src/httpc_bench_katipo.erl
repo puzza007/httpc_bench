@@ -11,8 +11,12 @@
 
 %% public
 get() ->
-    {ok, _} = katipo:get(httpc_bench, ?URL, #{}),
-    ok.
+    case katipo:get(httpc_bench, ?URL, #{timeout_ms => ?TIMEOUT}) of
+        {ok, _} ->
+            ok;
+        {error, _} = Err ->
+            Err
+    end.
 
 % NOTE: Opens arbitrary number of TCP connections
 % https://github.com/puzza007/katipo/issues/50
@@ -27,4 +31,5 @@ start(PoolSize) ->
 
 stop() ->
     ok = application:stop(katipo),
-    ok = application:stop(gproc).
+    ok = application:stop(worker_pool),
+    ok = application:stop(metrics).
