@@ -18,6 +18,7 @@ get() ->
     end.
 
 start(PoolSize) ->
+    application:ensure_all_started(ssl),
     {ok, _} = buoy_app:start(),
     Options = [
         {backlog_size, ?PIPELINING},
